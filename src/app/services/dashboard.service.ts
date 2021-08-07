@@ -6,7 +6,7 @@ import {Observable} from "rxjs";
   providedIn: 'root'
 })
 export class DashboardService {
-  host = 'http://localhost:3000';
+  host = 'http://localhost:3000/test';
   constructor(private httpClient: HttpClient) {
   }
 
