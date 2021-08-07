@@ -1,1 +1,30 @@
-<p>dashboard works!</p>
+<div class="container-fluid">
+  <div class="row">
+    <button (click)="startNewTest()" class="btn" >
+      Start a new test
+    </button>
+  </div>
+  <div class="row">
+    <button disabled>
+      Question: {{questionInfo}}, Time-rest: {{time}} secondes
+    </button>
+  </div>
+  <div class="row">
+    <button>
+      {{question.question}}
+    </button>
+  </div>
+  <div class="row">
+    <button type="button" class= "btn btn-block" *ngFor="let choice of choices"
+    (click)="nextQuestion()">
+       {{choice}}
+    </button>
+  </div>
+  <div class="row">
+    <ul>
+       <li type="button" class= "btn btn-block" *ngFor="let test of tests">
+         Name: {{test.name}}, Result: {{test.result}}, Duration: {{test.duration}}
+      </li>
+    </ul>
+  </div>
+</div>
