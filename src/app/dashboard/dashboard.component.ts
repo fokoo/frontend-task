@@ -9,24 +9,26 @@ import {Question} from "../models/Question";
   styleUrls: ['./dashboard.component.css']
 })
 export class DashboardComponent implements OnInit {
-  choices: any;
-  questionInfo: any;
-  duration: any;
+  choices: string[] = [];
+  questionInfo: string = 1 + "/" + 4;
+  duration:  string = "0 seconde";
   tests: Test[] = [];
   question: Question = new Question();
   questions: Question[] = [];
   index = 0;
   gameNotOver: boolean = true;
+  colorAnswer: string = "color: darkblue";
 
 
   constructor(private dashboardService :DashboardService) {
+
   }
 
   ngOnInit(): void {
     this.dashboardService.getQuestions().subscribe(
       (questions: Array<Question>) => {
       this.questions = questions;
-      this.nextQuestion();
+      this.nextQuestion(-1);
      })
   }
 
@@ -34,12 +36,12 @@ export class DashboardComponent implements OnInit {
     console.log( "index",this.index)
     this.question = this.questions[this.index++%5];
   }
-  nextQuestion() {
+  nextQuestion(ind: number) {
     this.setNewQuestion();
     this.setQuestionInfo();
     this.setChoices();
     this.setTime();
-    this.checkAnswers();
+    this.checkAnswers(ind);
     // calcule current result
   }
 
@@ -72,7 +74,15 @@ export class DashboardComponent implements OnInit {
     this.gameNotOver = true;
   }
 
-  private checkAnswers() {
-
+  private checkAnswers(ind: number) {
+    if (ind === -1){
+      return
+    }
+    if(this.question.response === this.choices[ind]){
+      this.colorAnswer = "color: darkblue; background-color: green"
+    } else {
+      this.colorAnswer = "color: darkblue; background-color: red"
+    }
+    this.colorAnswer = "color: darkblue";
   }
 }
