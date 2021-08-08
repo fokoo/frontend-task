@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, DoCheck } from '@angular/core';
 import {Test} from "../models/test";
 import {DashboardService} from "../services/dashboard.service";
 import {Question} from "../models/Question";
@@ -8,50 +8,73 @@ import {Question} from "../models/Question";
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css']
 })
+
 export class DashboardComponent implements OnInit {
   choices: string[] = [];
   questionInfo: string = 1 + "/" + 4;
-  duration:  string = "0 seconde";
+  duration:  any;
   tests: Test[] = [];
   question: Question = new Question();
   questions: Question[] = [];
   index = 0;
   gameNotOver: boolean = true;
-  colorAnswer: string = "color: darkblue";
-
+  averageResult: number = 0;
+  averageTime: number = 0;
+  currentResult: number = 0;
+  currentTest: Test;
+  testResults: Array<Test> = [];
+  private newQuestion: boolean = false;
 
   constructor(private dashboardService :DashboardService) {
-
+    this.currentTest = new Test();
+    this.currentTest.date = new Date();
   }
 
   ngOnInit(): void {
     this.dashboardService.getQuestions().subscribe(
       (questions: Array<Question>) => {
-      this.questions = questions;
-      this.nextQuestion(-1);
-     })
+        this.questions = questions;
+        this.newQuestion = true;
+        this.gameNotOver = false;
+      })
   }
+
+  ngDoCheck() {
+    this.setTime();
+  }
+
+  /* Names of methods indicacate what their do*/
 
   setNewQuestion(){
     console.log( "index",this.index)
     this.question = this.questions[this.index++%5];
   }
+
   nextQuestion(ind: number) {
-    this.setNewQuestion();
-    this.setQuestionInfo();
-    this.setChoices();
-    this.setTime();
     this.checkAnswers(ind);
-    // calcule current result
+    this.setNewQuestion();
+    this.setChoices();
+    this.setQuestionInfo();
   }
 
+  // method to set new test when clicked on start new test
   startNewTest() {
     this.startGame();
-    this.ngOnInit();
+    if (this.newQuestion) {
+      this.nextQuestion(-1);
+    } else {
+      this.dashboardService.getQuestions().subscribe(
+        (questions: Array<Question>) => {
+          this.questions = questions;
+          this.nextQuestion(-1);
+        })
+    }
   }
 
   private setChoices() {
-    this.choices = this.question.choices;
+    if (this.question){
+      this.choices = this.question.choices;
+    }
   }
 
   private setQuestionInfo() {
@@ -59,30 +82,54 @@ export class DashboardComponent implements OnInit {
       this.endGame();
     }
     this.questionInfo = this.index%5 + "/" + this.questions.length;
+    this.duration = 0;
   }
 
   private setTime() {
-    this.duration = 100 + "secondes"
+    const now = new Date();
+    this.duration = Math.floor((now.getTime() - this.currentTest.date.getTime())/1000) ;
   }
 
   private endGame() {
     this.gameNotOver = false;
+    this.newQuestion = false;
     this.index = 0;
+    const testResultsJson = localStorage.getItem("testResults");
+    if (testResultsJson != null) {
+      this.testResults = JSON.parse(testResultsJson);
+    }
+    this.currentTest.result = this.currentResult;
+    this.currentTest.duration = this.duration;
+    this.testResults.push(this.currentTest);
+
+    const len = this.testResults.length;
+    this.testResults.forEach((t) => {
+      this.averageResult = t.result/len, this.averageTime = t.duration/len });
+    localStorage.setItem("testResults", JSON.stringify(this.testResults));
   }
 
   private startGame() {
     this.gameNotOver = true;
+    this.currentTest = new Test();
+    this.duration = 0;
+    this.currentResult = 0;
+    this.currentTest.date = new Date();
   }
 
   private checkAnswers(ind: number) {
-    if (ind === -1){
+    if (ind === -1 || !this.question ){
       return
     }
-    if(this.question.response === this.choices[ind]){
-      this.colorAnswer = "color: darkblue; background-color: green"
-    } else {
-      this.colorAnswer = "color: darkblue; background-color: red"
+
+    if(this.question.response === this.choices[ind]) {
+      console.log("erfolg", this.currentResult);
+      ++this.currentResult;
+      this.currentTest.result = this.currentResult;
     }
-    this.colorAnswer = "color: darkblue";
+  }
+
+  emptyStorage(){
+    localStorage.removeItem("testResults");
+    window.location.reload();
   }
 }

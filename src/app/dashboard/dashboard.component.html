@@ -5,37 +5,63 @@
       Start a new test
     </button>
   </div>
-  <div class="row" *ngIf="gameNotOver">
+  <div class="row conteneur-center" *ngIf="gameNotOver">
     <button class="btn-dim" style="color: black;" disabled>
-      Question: {{questionInfo}}, Time: {{duration}}
+      Frage: {{questionInfo}}, Zeit: {{duration}} Sekunden, Erfolg: {{currentResult}}
     </button>
-  </div>
-
-  <div class="row" *ngIf="gameNotOver">
     <button class="btn-dim" style="color: black; background-color: azure" disabled>
       {{question.question}}
     </button>
-  </div>
-  <div class="row conteneur" *ngIf="gameNotOver">
-    <div class = "col"  *ngFor="let choice of choices; let i = index">
-       <button type="button" class="btn-dim" [style]="colorAnswer"
-       (click)="nextQuestion(i)">
-        {{i+1}}- {{choice}}
+    <div class = "col">
+       <button type="button" class="btn-dim"
+               style="color: darkblue"
+       (click)="nextQuestion(0)">
+        {{1}}) {{ choices[0]}}
        </button>
     </div>
+    <div class = "col" >
+      <button type="button" class="btn-dim"
+              style="color: darkblue"
+              (click)="nextQuestion(1)">
+        {{2}}) {{ choices[1]}}
+      </button>
+    </div>
+    <div class = "col" >
+      <button type="button" class="btn-dim"
+              style="color: darkblue"
+              (click)="nextQuestion(2)">
+        {{3}}) {{ choices[2]}}
+      </button>
+    </div>
+    <div class = "col">
+      <button type="button" class="btn-dim"
+              style="color: darkblue"
+              (click)="nextQuestion(3)">
+        {{4}}) {{ choices[3]}}
+      </button>
+    </div>
   </div>
-  <div class="row"  *ngIf="!gameNotOver">
+
+  <div class="row" *ngIf="!gameNotOver">
+      <button class="btn-dim" style="background-color: aliceblue; color: blue">
+        <h4> Durchschnitt </h4>
+        Ergebnisse: {{averageResult}} - Zeit: {{averageTime}} Sek.
+      </button>
     <table>
       <tr>
-        <th>Name</th>
+        <th>Datum</th>
         <th>Ergebnisse</th>
         <th>Zeit</th>
       </tr>
-      <tr type="button" class= "btn btn-block" *ngFor="let test of tests">
-        <td>{{test.name}}</td>
+      <tr class= "btn btn-block" *ngFor="let test of testResults">
+        <td>{{test.date | date: 'short'}}</td>
         <td>{{test.result}}</td>
-        <td>{{test.duration}}</td>
+        <td>{{test.duration}} Sek.</td>
       </tr>
     </table>
+    <button (click)="emptyStorage()">
+      Empty table
+    </button>
   </div>
+
 </div>
