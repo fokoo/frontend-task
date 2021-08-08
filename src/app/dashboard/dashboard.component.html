@@ -1,25 +1,26 @@
-<div class="container-fluid conteneur">
+<div class="conteneur">
   <div class="row">
-    <button (click)="startNewTest()" class="btn" [disabled]="gameNotOver">
+    <button (click)="startNewTest()" class="btn-dim" [disabled]="gameNotOver"
+    style="background-color: deepskyblue">
       Start a new test
     </button>
   </div>
   <div class="row" *ngIf="gameNotOver">
-    <button disabled>
-      Question: {{questionInfo}}, Time: {{duration}} secondes
+    <button class="btn-dim" style="color: black;" disabled>
+      Question: {{questionInfo}}, Time: {{duration}}
     </button>
   </div>
 
   <div class="row" *ngIf="gameNotOver">
-    <button>
+    <button class="btn-dim" style="color: black; background-color: azure" disabled>
       {{question.question}}
     </button>
   </div>
-  <div  *ngIf="gameNotOver">
-    <div>
-       <button type="button" class= "btn" *ngFor="let choice of choices"
-       (click)="nextQuestion()">
-         {{choice}}
+  <div class="row conteneur" *ngIf="gameNotOver">
+    <div class = "col"  *ngFor="let choice of choices; let i = index">
+       <button type="button" class="btn-dim" [style]="colorAnswer"
+       (click)="nextQuestion(i)">
+        {{i+1}}- {{choice}}
        </button>
     </div>
   </div>
