@@ -2,12 +2,12 @@
   <div class="row">
     <button (click)="startNewTest()" class="btn-dim" [disabled]="gameNotOver"
     style="background-color: deepskyblue">
-      Start a new test
+      Starten Sie einen neuen Test
     </button>
   </div>
   <div class="row conteneur-center" *ngIf="gameNotOver">
     <button class="btn-dim" style="color: black;" disabled>
-      Frage: {{questionInfo}}, Zeit: {{duration}} Sekunden, Erfolg: {{currentResult}}
+      Frage: {{questionInfo}}, Zeit: {{time | async}} Sekunden, Erfolg: {{currentResult}}
     </button>
     <button class="btn-dim" style="color: black; background-color: azure" disabled>
       {{question.question}}
@@ -60,7 +60,7 @@
       </tr>
     </table>
     <button (click)="emptyStorage()">
-      Empty table
+      Entleert die Tabelle
     </button>
   </div>
 

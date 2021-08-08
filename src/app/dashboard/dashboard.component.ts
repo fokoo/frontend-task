@@ -1,7 +1,8 @@
-import { Component, OnInit, DoCheck } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import {Test} from "../models/test";
 import {DashboardService} from "../services/dashboard.service";
 import {Question} from "../models/Question";
+import {Observable, Observer} from "rxjs";
 
 @Component({
   selector: 'app-dashboard',
@@ -12,7 +13,10 @@ import {Question} from "../models/Question";
 export class DashboardComponent implements OnInit {
   choices: string[] = [];
   questionInfo: string = 1 + "/" + 4;
-  duration:  any;
+  duration: any;
+  time = new Observable<number>((observer: Observer<number>) => {
+  setInterval(() => observer.next(this.setTime()), 1000);
+});
   tests: Test[] = [];
   question: Question = new Question();
   questions: Question[] = [];
@@ -39,15 +43,13 @@ export class DashboardComponent implements OnInit {
       })
   }
 
-  ngDoCheck() {
-    this.setTime();
-  }
-
   /* Names of methods indicacate what their do*/
 
   setNewQuestion(){
-    console.log( "index",this.index)
-    this.question = this.questions[this.index++%5];
+    console.log( "index",this.index);
+    if (this.questions){
+      this.question = this.questions[this.index++%5];
+    }
   }
 
   nextQuestion(ind: number) {
@@ -88,6 +90,7 @@ export class DashboardComponent implements OnInit {
   private setTime() {
     const now = new Date();
     this.duration = Math.floor((now.getTime() - this.currentTest.date.getTime())/1000) ;
+    return this.duration
   }
 
   private endGame() {
@@ -101,6 +104,8 @@ export class DashboardComponent implements OnInit {
     this.currentTest.result = this.currentResult;
     this.currentTest.duration = this.duration;
     this.testResults.push(this.currentTest);
+    // @ts-ignore
+    this.question = null;
 
     const len = this.testResults.length;
     this.testResults.forEach((t) => {
@@ -117,10 +122,10 @@ export class DashboardComponent implements OnInit {
   }
 
   private checkAnswers(ind: number) {
-    if (ind === -1 || !this.question ){
+    if (ind === -1 || this.question === undefined || this.question === null ){
       return
     }
-
+    console.log("question", JSON.stringify(this.question));
     if(this.question.response === this.choices[ind]) {
       console.log("erfolg", this.currentResult);
       ++this.currentResult;
