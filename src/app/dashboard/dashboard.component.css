@@ -7,6 +7,13 @@
   justify-content: space-around;
 }
 
+.conteneur-center
+{
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  justify-content: space-around;
+}
 table {
   font-family: arial, sans-serif;
   border-collapse: collapse;
@@ -33,4 +40,12 @@ tr:nth-child(even) {
   margin: 4px 2px;
   cursor: pointer;
   border-radius: 12px;
+}
+
+.succesful {
+  background-color: green;
+}
+
+.notsuccesful {
+  background-color: red;
 }
