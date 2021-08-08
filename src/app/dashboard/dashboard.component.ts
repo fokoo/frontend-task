@@ -11,11 +11,12 @@ import {Question} from "../models/Question";
 export class DashboardComponent implements OnInit {
   choices: any;
   questionInfo: any;
-  time: any;
+  duration: any;
   tests: Test[] = [];
   question: Question = new Question();
   questions: Question[] = [];
   index = 0;
+  gameNotOver: boolean = true;
 
 
   constructor(private dashboardService :DashboardService) {
@@ -25,20 +26,53 @@ export class DashboardComponent implements OnInit {
     this.dashboardService.getQuestions().subscribe(
       (questions: Array<Question>) => {
       this.questions = questions;
-      this.setNewQuestion();
+      this.nextQuestion();
      })
   }
 
   setNewQuestion(){
-    this.question = this.questions[this.index++%4];
+    console.log( "index",this.index)
+    this.question = this.questions[this.index++%5];
   }
   nextQuestion() {
     this.setNewQuestion();
-    // check if good answers
+    this.setQuestionInfo();
+    this.setChoices();
+    this.setTime();
+    this.checkAnswers();
     // calcule current result
   }
 
   startNewTest() {
+    this.startGame();
     this.ngOnInit();
+  }
+
+  private setChoices() {
+    this.choices = this.question.choices;
+  }
+
+  private setQuestionInfo() {
+    if(this.index%5 === 0){
+      this.endGame();
+    }
+    this.questionInfo = this.index%5 + "/" + this.questions.length;
+  }
+
+  private setTime() {
+    this.duration = 100 + "secondes"
+  }
+
+  private endGame() {
+    this.gameNotOver = false;
+    this.index = 0;
+  }
+
+  private startGame() {
+    this.gameNotOver = true;
+  }
+
+  private checkAnswers() {
+
   }
 }

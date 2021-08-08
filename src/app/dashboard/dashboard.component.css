@@ -1,6 +1,24 @@
-#conteneur
+.conteneur
 {
   display: flex;
-  justify-content: center;
   align-items: center;
+  flex-direction: column;
+  height: 350px; /* Un peu de hauteur pour que les éléments aient la place de bouger */
+  justify-content: space-around;
+}
+
+table {
+  font-family: arial, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+td, th {
+  border: 1px solid #dddddd;
+  text-align: left;
+  padding: 8px;
+}
+
+tr:nth-child(even) {
+  background-color: #dddddd;
 }

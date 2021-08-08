@@ -1,30 +1,40 @@
-<div class="container-fluid">
+<div class="container-fluid conteneur">
   <div class="row">
-    <button (click)="startNewTest()" class="btn" >
+    <button (click)="startNewTest()" class="btn" [disabled]="gameNotOver">
       Start a new test
     </button>
   </div>
-  <div class="row">
+  <div class="row" *ngIf="gameNotOver">
     <button disabled>
-      Question: {{questionInfo}}, Time-rest: {{time}} secondes
+      Question: {{questionInfo}}, Time: {{duration}} secondes
     </button>
   </div>
-  <div class="row">
+
+  <div class="row" *ngIf="gameNotOver">
     <button>
       {{question.question}}
     </button>
   </div>
-  <div class="row">
-    <button type="button" class= "btn btn-block" *ngFor="let choice of choices"
-    (click)="nextQuestion()">
-       {{choice}}
-    </button>
+  <div  *ngIf="gameNotOver">
+    <div>
+       <button type="button" class= "btn" *ngFor="let choice of choices"
+       (click)="nextQuestion()">
+         {{choice}}
+       </button>
+    </div>
   </div>
-  <div class="row">
-    <ul>
-       <li type="button" class= "btn btn-block" *ngFor="let test of tests">
-         Name: {{test.name}}, Result: {{test.result}}, Duration: {{test.duration}}
-      </li>
-    </ul>
+  <div class="row"  *ngIf="!gameNotOver">
+    <table>
+      <tr>
+        <th>Name</th>
+        <th>Ergebnisse</th>
+        <th>Zeit</th>
+      </tr>
+      <tr type="button" class= "btn btn-block" *ngFor="let test of tests">
+        <td>{{test.name}}</td>
+        <td>{{test.result}}</td>
+        <td>{{test.duration}}</td>
+      </tr>
+    </table>
   </div>
 </div>
