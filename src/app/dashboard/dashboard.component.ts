@@ -122,7 +122,7 @@ export class DashboardComponent implements OnInit {
   }
 
   private checkAnswers(ind: number) {
-    if (ind === -1 || this.question == undefined || this.question == null ){
+    if (ind === -1 || !this.question ){
       return
     }
     if(this.question.response === this.choices[ind]) {
