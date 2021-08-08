@@ -52,6 +52,7 @@ export class DashboardComponent implements OnInit {
     }
   }
 
+// methods is call when the player clic on a choice(answer)
   nextQuestion(ind: number) {
     this.checkAnswers(ind);
     this.setNewQuestion();
@@ -104,8 +105,6 @@ export class DashboardComponent implements OnInit {
     this.currentTest.result = this.currentResult;
     this.currentTest.duration = this.duration;
     this.testResults.push(this.currentTest);
-    // @ts-ignore
-    this.question = null;
 
     const len = this.testResults.length;
     this.testResults.forEach((t) => {
@@ -115,6 +114,7 @@ export class DashboardComponent implements OnInit {
 
   private startGame() {
     this.gameNotOver = true;
+    this.question = new Question();
     this.currentTest = new Test();
     this.duration = 0;
     this.currentResult = 0;
@@ -122,10 +122,9 @@ export class DashboardComponent implements OnInit {
   }
 
   private checkAnswers(ind: number) {
-    if (ind === -1 || this.question === undefined || this.question === null ){
+    if (ind === -1 || this.question == undefined || this.question == null ){
       return
     }
-    console.log("question", JSON.stringify(this.question));
     if(this.question.response === this.choices[ind]) {
       console.log("erfolg", this.currentResult);
       ++this.currentResult;
